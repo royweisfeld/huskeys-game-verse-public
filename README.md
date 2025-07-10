@@ -37,19 +37,74 @@ Before running make sure to create a DB, and upload your backend then edit these
 gamification-backend/wrangler.jsonc - database_id
 src/utils/api.ts - API_BASE
 
-```sh
-git clone <YOUR_GIT_URL>
-cd Huskeys-game-verse
-npm install
-npm run dev
-```
+---
 
-### Backend Setup
+### 🔑 Setting Up Slack Webhook Wrangler Secret
 
-```sh
-cd gamification-backend
-npx deploy wrangler
-```
+**Why:** The Slack webhook is used to send notifications (like achievements or task completions) from your backend to a Slack channel. The webhook URL is sensitive and should be stored securely as a Wrangler secret.
+
+**How to set up:**
+1. **Create a Slack Incoming Webhook:**
+   - Go to your Slack workspace: [Slack API: Incoming Webhooks](https://api.slack.com/messaging/webhooks)
+   - Create a new app or use an existing one, add the "Incoming Webhooks" feature, and generate a webhook URL for your desired channel.
+2. **Add the webhook URL as a Wrangler secret:**
+   ```sh
+   cd gamification-backend
+   npx wrangler secret put SLACK_WEBHOOK_URL
+   ```
+   Paste your webhook URL when prompted.
+
+---
+
+### 🗄️ Setting Up Cloudflare D1 Database
+
+1. **Install Wrangler CLI if you haven't:**
+   ```sh
+   npm install -g wrangler
+   ```
+2. **Authenticate Wrangler with your Cloudflare account:**
+   ```sh
+   npx wrangler login
+   ```
+3. **Create a new D1 database:**
+   ```sh
+   npx wrangler d1 create <YOUR_DB_NAME>
+   ```
+   Note the returned `database_id`.
+4. **Update your backend config:**
+   - Edit `gamification-backend/wrangler.jsonc` and set the `database_id` to your new D1 database ID.
+5. **(Optional) Run migrations:**
+   ```sh
+   npx wrangler d1 migrations apply <YOUR_DB_NAME>
+   ```
+
+---
+
+### ☁️ Setting Up Cloudflare Worker (Backend)
+
+1. Ensure your `wrangler.jsonc` is configured with your account and database info.
+2. Deploy your backend:
+   ```sh
+   cd gamification-backend
+   npx wrangler deploy
+   ```
+3. Note the deployed Worker URL; you’ll use this as your API base in the frontend (`src/utils/api.ts`).
+
+---
+
+### 🤝 Setting Up Slack and Linear Integrations
+
+#### Slack
+- See the Slack Webhook section above for webhook setup.
+- Make sure the webhook is added as a Wrangler secret (`SLACK_WEBHOOK_URL`).
+
+#### Linear
+- The backend listens for Linear events via a webhook.
+- **How to set up:**
+  1. In your Linear workspace, go to Settings → Integrations → Webhooks.
+  2. Create a new webhook and set the URL to your deployed Cloudflare Worker backend (from the deployment step above).
+  3. Select the events you want to send (e.g., issue updates, comments, etc.).
+  4. Save the webhook. Now, Linear will communicate directly with your backend when relevant events occur.
 
 ---
 

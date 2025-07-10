@@ -1,0 +1,4 @@
+-- Migration number: 0011 	 2025-07-10T21:13:48.201Z
+
+ALTER TABLE employees ADD COLUMN current_streak INTEGER DEFAULT 0;
+ALTER TABLE employees ADD COLUMN max_streak INTEGER DEFAULT 0;

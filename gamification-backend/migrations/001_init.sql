@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS employees (
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  xp INTEGER DEFAULT 0,
+  level INTEGER DEFAULT 1
+);

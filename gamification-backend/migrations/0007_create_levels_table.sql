@@ -1,0 +1,6 @@
+-- Migration number: 0007 	 2025-07-10T20:55:56.845Z
+CREATE TABLE IF NOT EXISTS levels (
+  level INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  xp_required INTEGER NOT NULL
+); 

@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS completions (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  count INTEGER DEFAULT 0
+);
+INSERT OR IGNORE INTO completions (id, count) VALUES (1, 0);
